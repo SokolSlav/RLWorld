@@ -21,7 +21,7 @@ class MessageContext(ABCMiddleware[Message]):
                 "⛏ <b>Добувай, продавай та прокачуй!</b>",
                 parse_mode="HTML"
             )
-            
+
         ctx.set("user", user)
         return True
 

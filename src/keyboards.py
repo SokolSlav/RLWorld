@@ -13,6 +13,7 @@ game_menu = (
     .add(InlineButton("👷🏽 Меню робітників", callback_data="game_hire"))
     .row()
     .add(InlineButton("⛏️ Добуток руди", callback_data="game_mining"))
+    .add(InlineButton("🏬 Продати руду", callback_data="game_sell"))
     .add(InlineButton("⬅️ Back", callback_data="menu"))
 ).get_markup()
 
@@ -38,3 +39,22 @@ back_to_menu = (
     .add(InlineButton("⬅️ Back", callback_data="menu"))
 ).get_markup()
 
+game_sell_menu = (
+    InlineKeyboard()
+    .add(InlineButton("🛒 Продати руду вибірково", callback_data="sell_particular"))
+    .row()
+    .add(InlineButton("🛍 Продати всю руду", callback_data="sell_all"))
+    .row()
+    .add(InlineButton("⬅️ Back", callback_data="game"))
+).get_markup()
+
+sell_particular_menu = (
+    InlineKeyboard()
+    .add(InlineButton("⚫️ Продати весь камінь", callback_data="sell_stone"))
+    .add(InlineButton("⚪️ Продати все залізо", callback_data="sell_iron"))
+    .add(InlineButton("🟡 Продати все золото", callback_data="sell_gold"))
+    .add(InlineButton("🟣 Продати всі діаманти", callback_data="sell_diamond"))
+    .add(InlineButton("🔵 Продати всю безкінечність", callback_data="sell_void"))
+    .row()
+    .add(InlineButton("⬅️ Back", callback_data="game"))
+).get_markup()

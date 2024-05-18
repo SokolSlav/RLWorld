@@ -20,7 +20,7 @@ class User(Model):
     #     "exp_need": INT,
     #     "multiplier": FLOAT
     # },...]
-
+    multiplier = fields.FloatField(default=1.0)
     mining_timestamp = fields.BigIntField(default=0)
     ores = fields.OneToOneField("models.Ores", "user", null=False)
 

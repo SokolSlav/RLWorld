@@ -40,7 +40,7 @@ async def hire_handler(cq: CallbackQuery, user: User, number: int):
                 "level": 1,
                 "exp": 0,
                 "exp_need": 100,
-                "multiplier": 1.0
+                "multiplier": 0
             }
         )
         

@@ -1,3 +1,3 @@
-from . import context
+from . import context, workers
 
-dps = [context.dp]
+dps = [context.dp, workers.dp]

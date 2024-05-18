@@ -1,4 +1,4 @@
-from mubble import Token, API, Dispatch, Mubble
+from mubble import Token, API, Dispatch, Mubble, LoopWrapper
 from tortoise import Tortoise
 
 from src import dps
@@ -10,6 +10,9 @@ for dp in dps:
     dispatch.load(dp)
 
 bot = Mubble(api, dispatch=dispatch)
+
+
+lw = LoopWrapper()
 
 
 async def setup_database():

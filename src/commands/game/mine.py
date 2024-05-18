@@ -14,9 +14,9 @@ dp = Dispatch()
 CHANCES = {
         "stone": 0.80,
         "iron": 0.10,
-        "gold": 0.05,
-        "diamond": 0.02,
-        "void": 0.01,
+        "gold": 0.03,
+        "diamond": 0.008,
+        "void": 0.005,
     }
 keys = list(CHANCES.keys())
 values = list(CHANCES.values())
@@ -56,13 +56,20 @@ async def start_mining_handler(cq: CallbackQuery, user: User):
     if not user.workers:
         await cq.answer("💎 Ви не маєте робітників!")
         return
-    
+
     if user.mining_timestamp != 0:
         await cq.answer("💎 Ви вже почали добуток руди!")
         return
     user.mining_timestamp = time.time()
     await user.save()
     await cq.answer("💎 Ви почали добуток руди!")
+
+
+async def get_multiplier(user: User):
+    multiplier = user.multiplier
+    for worker in user.workers:
+        multiplier += worker["multiplier"]
+    return multiplier
 
 
 @dp.callback_query(CallbackData("end_mining"))
@@ -72,18 +79,21 @@ async def end_mining_handler(cq: CallbackQuery, user: User):
         return
 
     time_difference = round((time.time() - user.mining_timestamp) / 10)
+    multiplier = await get_multiplier(user)
     if time_difference == 0:
         await cq.answer("💎 Ви ще не добули жодної руди!")
-
     elif time_difference > 60:
-        amounts = random.choices(keys, weights=values, k=60)
+        amounts = random.choices(keys, weights=values, k=int(60 * user.workers_count * multiplier))
         await cq.answer("💎 Ви не можете добувати руду більше ніж 1 годину.")
     else:
-        amounts = random.choices(keys, weights=values, k=time_difference)
+        amounts = random.choices(keys, weights=values, k=int(time_difference * user.workers_count * multiplier))
 
     ores: Ores = await user.ores.first()
 
     results = {amount: amounts.count(amount) for amount in set(amounts)}
+    
+    for worker in user.workers:
+        worker["exp"] += sum(results.values())
 
     ores.stone += results.get("stone", 0)
     ores.iron += results.get("iron", 0)
@@ -116,4 +126,4 @@ async def end_mining_handler(cq: CallbackQuery, user: User):
     )
 
     await cq.edit_text(text, parse_mode=ParseMode.HTML, reply_markup=game_mining_menu)
-    await cq.answer(f"💎 Ви завершили добуток руди!")
+    await cq.answer("💎 Ви завершили добуток руди!")
